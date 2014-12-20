@@ -9,7 +9,7 @@ class Square{
     
   }
   
-  Square(int col, int row){
+  Square(float col, float row){
     size = 20 ;
     x = 200 + col*1.2*size ;
     y = 100 + row*1.2*size ;
