@@ -84,7 +84,7 @@ void reset(){
   board = new Bar(100);
   rec = new Square[50];
   for (int i = 0; i< rec.length ; i++){
-    rec[i] = new Square(i/5,i%5);
+    rec[i] = new Square(int(i/5),int(i%5));
     }
 
   
