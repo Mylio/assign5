@@ -143,6 +143,11 @@ void checkRecHit(){
      // rec.remove(i);
       rec[i].y = height + 100 ;
       recHit ++ ;
+      if(ball[0].circleDistanceX <= (ball[0].rectangleWidth/2 + ball[0].radius)){
+      ball[0].xSpeed*=-1;
+      }else {
+      ball[0].ySpeed*=-1 ;
+      }
     }
   }
 }
@@ -165,11 +170,6 @@ void checkWin(){
   }
 }
 void keyPressed() {
-/*  if (status == GAME_PLAYING) {
-    ship.keyTyped();
-    cheatKeys();
-    shootBullet(30);
-  }*/
   statusCtrl();
 }
 void statusCtrl() {
