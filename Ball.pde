@@ -1,203 +1,87 @@
-Ball []ball;
-Bar board;
-Square [] rec;
-int life ;
-int status = 0;
-int recHit = 0 ;
-float shootAngle ;
-final int GAME_START = 0 ;
-final int GAME_WIN = 1 ;
-final int GAME_LOSE = 2 ;
-final int GAME_PAUSE = 3 ;
-final int GAME_PLAYING = 4 ;
-final int GAME_READY = 5 ;
-
-void setup(){
-  
-  size(640,480);
-  reset();
-}
-
-void draw(){
-  background(255);
-  textSize(32);
-  text("LIFE", 20 , height - 20); 
-  fill(255, 0,0 );
-  for(int i = 0 ;i< life ;i++){
-    noStroke();
-    ellipse(120 + i*30 ,height - 30,20,20);
-  }
-  for (int i=0; i<rec.length; i++){    
-    rec[i].display();
-  }
-/*  if (mousePressed && (mouseButton == RIGHT) && (status==GAME_START)){
-    status = GAME_PLAYING;
-    }
- */ 
-  switch (status){ 
-    case GAME_START :
-      text("Press Enter",320,420); 
-      ball[0].display();
-      ball[0].move();
-    //  ellipse(board.x,board.y-ball[0].size/2-5,ball[0].size,ball[0].size);
-      board.move();
-      board.display();
-      break ;
-   /* case GAME_READY:
-      //ellipse(board.x,board.y,ball[0].size,ball[0].size);
-      board.move();
-      board.display();*/
-    case GAME_PLAYING :
-      ball[0].move();
-      ball[0].display();
-      board.move();
-      board.display();
-      checkRecHit();
-      checkWin();
-      checkLose();
-      break ;
-    case GAME_WIN :
-      background(0);
-      textSize(50);
-      fill(250, 244,156 );
-      text("GAME WIN", width/2 , height/2 );
-      break ;
-    case GAME_LOSE :
-      background(0);
-      textSize(50);
-      fill(140, 6,13 );
-      text("GAME LOSE", width/2 , height/2 );       
-      break ;
-    case GAME_PAUSE :
-      textSize(50);
-      fill(140, 6,13 );
-      text("GAME PAUSE", width/2 , height/2 );    
-      break ;
-  }
+class Ball{
+  float x;
+  float y;
+  float xSpeed;
+  float ySpeed;
+  float size;
+  float circleDistanceX ;
+  float rectangleWidth ;
+  float radius ;
+  void move(){
     
-}
-
-void reset(){
-  life = 3 ;
-  recHit = 0 ;
-  shootAngle = random(-5,5) ;
-  board = new Bar(100);
-  rec = new Square[50];
-  for (int i = 0; i< rec.length ; i++){
-    rec[i] = new Square(int(i/5),int(i%5));
+    if (status==GAME_START){
+    x = board.x ;
+    y = board.y-5-this.size/2;
+    }else if(status == GAME_PLAYING){
+    x+=xSpeed;
+    y+=ySpeed;
+    if (x<size/2 || x>width-size/2){ //hit boarder left & right
+      xSpeed *= -1;
     }
-
-  
-  ball = new Ball[1];
-  for (int i=0; i<ball.length; i++){
-    ball[i] = new Ball(10, shootAngle);   
-  }
-  choose();
-  
-  
-  //point = 0 ;//point unprint
-}
-void choose(){
- 
-    int redR1 = int(random(rec.length)) ;
-    int redR2 = int(random(rec.length)) ;
-    int redR3 = int(random(rec.length)) ;
-    int bluR1 = int(random(rec.length)) ;
-    int bluR2 = int(random(rec.length)) ;
-    int bluR3 = int(random(rec.length)) ;
-  if((redR1 == redR2)||(redR1 == redR3)||(redR2 == redR3)||(bluR1 == bluR2)||(bluR1 == bluR3)||(bluR2 == bluR3)){
-    redR1 = int(random(rec.length)) ;
-    redR2 = int(random(rec.length)) ;
-    redR3 = int(random(rec.length)) ;
-    bluR1 = int(random(rec.length)) ;
-    bluR2 = int(random(rec.length)) ;
-    bluR3 = int(random(rec.length)) ;
-  }
- /* fill(124,165,219);//blue
-  rec[bluR1];
-  rec[bluR2];
-  rec[bluR3];
-  fill(250,111,165);//red
-  rec[redR1];
-  rec[redR1];
-  rec[redR1];*/
-/*  if(redR1 == redR2){
-    redR2 = int(random(rec.length)) ;
-  }else if(redR1 == redR3){
-    redR3 = int(random(rec.length)) ;
-  }else if(redR2 == redR3){
-    redR3 = int(random(rec.length)) ;
-  }else if(bluR1 == bluR2){
-    bluR2 = int(random(rec.length)) ;
-  }else if(bluR1 == bluR3){
-    bluR3 = int(random(rec.length)) ;
-  }else if(bluR2 == bluR3){
-    bluR3 = int(random(rec.length)) ;
-  }*/
-//  println(redR1,redR2,redR3,bluR1,bluR2,bluR3);
-}
-
-void checkRecHit(){
-  for(int i =0;i<rec.length ;i++){
-    if(ball[0].isHit(ball[0].x,ball[0].y,ball[0].size,rec[i].x,rec[i].y,rec[i].size,rec[i].size)){
-     // rec.remove(i);
-      rec[i].y = height + 100 ;
-      recHit ++ ;
-      if(ball[0].circleDistanceX <= (ball[0].rectangleWidth/2 + ball[0].radius)){
-      ball[0].xSpeed*=-1;
-      }else {
-      ball[0].ySpeed*=-1 ;
-      }
+    if (y<size/2){ //hit boarder top
+      ySpeed *= -1;
+    }
+    if (y>height-size/2 + 10){ //hit boarder bottom
+     // y = size/2;
+     x = board.x ;
+     y = board.y ;
+    }
+    
+   
+    
+    float bottom = y+size/2; //bottom of the ball
+    float bl = board.y - 10/2; //top of the board 
+    float bLeft = board.x-board.len/2; //left of the board
+    float bRight = board.x+board.len/2; //right of the board
+    if (bottom >= bl && x>bLeft && x<bRight){
+        ySpeed *= -1;
+        y = bl;
+    }
     }
   }
-}
-
-void checkLose(){
-  if(ball[0].y > height){
-  life-- ;
- // shootAngle = random(-5,5);
-  status = GAME_START ;
-  
-  if (life == 0){
-  status = GAME_LOSE ;
+  void display(){
+    ellipse(x,y,size,size);
   }
-  }
-}
-
-void checkWin(){
-  if( recHit == rec.length){
-    status = GAME_WIN ;    
-  }
-}
-void keyPressed() {
-  statusCtrl();
-}
-void statusCtrl() {
   
+  boolean isHit(
+        float circleX,
+        float circleY,
+        float radius,
+        float rectangleX,
+        float rectangleY,
+        float rectangleWidth,
+        float rectangleHeight)
+  {
+     circleDistanceX = abs(circleX - rectangleX);
+   // float circleDistanceX = abs(circleX - rectangleX);//abs() -> get absolute value
+      float circleDistanceY = abs(circleY - rectangleY);
+   
+      if (circleDistanceX > (rectangleWidth/2 + radius)) { return false; }
+      if (circleDistanceY > (rectangleHeight/2 + radius)) { return false; }
+   
+      if (circleDistanceX <= (rectangleWidth/2)) { return true; }
+      if (circleDistanceY <= (rectangleHeight/2)) { return true; }
+   
+      float cornerDistance_sq = pow(circleDistanceX - rectangleWidth/2, 2) +
+                           pow(circleDistanceY - rectangleHeight/2, 2);
+   
+      return (cornerDistance_sq <= pow(radius,2));//false -> not hit
+  }
   
-  if (key == ENTER ) {
-    switch(status) {
-   /* case GAME_READY:
-      status = GAME_PLAYING;*/
-    case GAME_START:
-      shootAngle = random(-5,5);
-      ball[0] = new Ball(10, shootAngle);
-      status = GAME_PLAYING;
-      break;
-   case GAME_LOSE:
-      reset();
-      status = GAME_START;
-      break;
-   case GAME_WIN:
-      reset();
-      status = GAME_START;
-      break;
-   case GAME_PLAYING:
-      status = GAME_PAUSE;
-      break;
-   case  GAME_PAUSE:
-      status = GAME_PLAYING;
-      break; 
-     }
+  Ball(){
+    x = random(width);
+    y = random(height);
+    xSpeed = 5;
+    ySpeed = 3;
+    size = 10;
+  }
+  
+  Ball(float size, float xSpeed){
+    x = board.x;
+    y = board.y-5-this.size/2;
+ //   y = random(height);
+    this.xSpeed = xSpeed;
+    this.ySpeed = size;
+    this.size = size;
   }
 }
