@@ -10,8 +10,8 @@ class Square{
   }
   
   Square(float col, float row){
-    size = 20 ;
-    x = 200 + col*1.2*size ;
+    size = 30 ;
+    x = 150 + col*1.2*size ;
     y = 100 + row*1.2*size ;
     
   }
