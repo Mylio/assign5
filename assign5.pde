@@ -5,6 +5,12 @@ int life ;
 int status = 0;
 int recHit = 0 ;
 float shootAngle ;
+int redR1 ;
+int redR2 ;
+int redR3 ;
+int bluR1 ;
+int bluR2 ;
+int bluR3;
 final int GAME_START = 0 ;
 final int GAME_WIN = 1 ;
 final int GAME_LOSE = 2 ;
@@ -12,8 +18,8 @@ final int GAME_PAUSE = 3 ;
 final int GAME_PLAYING = 4 ;
 final int GAME_READY = 5 ;
 
-void setup(){
-  
+
+void setup(){  
   size(640,480);
   reset();
 }
@@ -30,18 +36,19 @@ void draw(){
   for (int i=0; i<rec.length; i++){    
     rec[i].display();
   }
-/*  if (mousePressed && (mouseButton == RIGHT) && (status==GAME_START)){
+ if (mousePressed && (mouseButton == RIGHT) && (status==GAME_START)){
     status = GAME_PLAYING;
     }
- */ 
+ 
   switch (status){ 
     case GAME_START :
-      text("Press Enter",320,420); 
+      text("Right Click or Press Enter",200,420); 
       ball[0].display();
       ball[0].move();
     //  ellipse(board.x,board.y-ball[0].size/2-5,ball[0].size,ball[0].size);
       board.move();
       board.display();
+      drawSpecial();
       break ;
    /* case GAME_READY:
       //ellipse(board.x,board.y,ball[0].size,ball[0].size);
@@ -55,6 +62,7 @@ void draw(){
       checkRecHit();
       checkWin();
       checkLose();
+      drawSpecial();
       break ;
     case GAME_WIN :
       background(0);
@@ -99,12 +107,12 @@ void reset(){
 }
 void choose(){
  
-    int redR1 = int(random(rec.length)) ;
-    int redR2 = int(random(rec.length)) ;
-    int redR3 = int(random(rec.length)) ;
-    int bluR1 = int(random(rec.length)) ;
-    int bluR2 = int(random(rec.length)) ;
-    int bluR3 = int(random(rec.length)) ;
+    redR1 = int(random(rec.length)) ;
+     redR2 = int(random(rec.length)) ;
+    redR3 = int(random(rec.length)) ;
+    bluR1 = int(random(rec.length)) ;
+  bluR2 = int(random(rec.length)) ;
+  bluR3 = int(random(rec.length)) ;
   if((redR1 == redR2)||(redR1 == redR3)||(redR2 == redR3)||(bluR1 == bluR2)||(bluR1 == bluR3)||(bluR2 == bluR3)){
     redR1 = int(random(rec.length)) ;
     redR2 = int(random(rec.length)) ;
@@ -113,28 +121,17 @@ void choose(){
     bluR2 = int(random(rec.length)) ;
     bluR3 = int(random(rec.length)) ;
   }
- /* fill(124,165,219);//blue
-  rec[bluR1];
-  rec[bluR2];
-  rec[bluR3];
-  fill(250,111,165);//red
-  rec[redR1];
-  rec[redR1];
-  rec[redR1];*/
-/*  if(redR1 == redR2){
-    redR2 = int(random(rec.length)) ;
-  }else if(redR1 == redR3){
-    redR3 = int(random(rec.length)) ;
-  }else if(redR2 == redR3){
-    redR3 = int(random(rec.length)) ;
-  }else if(bluR1 == bluR2){
-    bluR2 = int(random(rec.length)) ;
-  }else if(bluR1 == bluR3){
-    bluR3 = int(random(rec.length)) ;
-  }else if(bluR2 == bluR3){
-    bluR3 = int(random(rec.length)) ;
-  }*/
-//  println(redR1,redR2,redR3,bluR1,bluR2,bluR3);
+}
+ // fill(124,165,219);//blue
+  void drawSpecial(){
+  rec[bluR1].displayB();
+  rec[bluR2].displayB();
+  rec[bluR3].displayB();
+  
+//  fill(250,111,165);//red
+  rec[redR1].displayR();
+  rec[redR2].displayR();
+  rec[redR3].displayR();
 }
 
 void checkRecHit(){
@@ -143,10 +140,15 @@ void checkRecHit(){
      // rec.remove(i);
       rec[i].y = height + 100 ;
       recHit ++ ;
+      if(i==redR1 || i==redR2 || i==redR3){
+        board.len -= 15 ;
+      }else if(i==bluR1 || i==bluR2 || i==bluR3){
+        board.len += 15 ;
+      }
       if(ball[0].circleDistanceX <= (ball[0].rectangleWidth/2 + ball[0].radius)){
       ball[0].xSpeed*=-1;
       }else {
-      ball[0].ySpeed*=-1 ;
+      ball[0].ySpeed*=-1;
       }
     }
   }
@@ -155,7 +157,7 @@ void checkRecHit(){
 void checkLose(){
   if(ball[0].y > height){
   life-- ;
- // shootAngle = random(-5,5);
+  shootAngle = random(-5,5);
   status = GAME_START ;
   
   if (life == 0){
