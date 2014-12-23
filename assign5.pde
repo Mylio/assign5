@@ -79,7 +79,10 @@ void draw(){
     case GAME_PAUSE :
       textSize(50);
       fill(140, 6,13 );
-      text("GAME PAUSE", width/2 , height/2 );    
+      text("GAME PAUSE", width/2 , height/2 );  
+      ball[0].display();     
+      board.display();
+      drawSpecial();  
       break ;
   }
     
