@@ -8,6 +8,14 @@ class Square{
     rect(x,y,size,size);
     
   }
+  void displayR(){
+    fill(250,111,165);
+    rect(x,y,size,size);
+  }
+  void displayB(){
+    fill(124,165,219);
+    rect(x,y,size,size);
+  }
   
   Square(float col, float row){
     size = 30 ;
